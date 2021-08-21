@@ -1,8 +1,9 @@
 // import logo from './logo.svg';
 import "./App.css";
+import React, { useState } from "react";
 
 const App = () => {
-    const stars = 6;
+    const [stars, setStars] = useState(utils.random(1, 9));
     return (
         <div className="game">
             <div className="help">
