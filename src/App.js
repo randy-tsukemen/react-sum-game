@@ -2,24 +2,25 @@
 import "./App.css";
 import React from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
 
-const testData = [
-    {
-        name: "Dan Abramov",
-        avatar_url: "https://avatars0.githubusercontent.com/u/810438?v=4",
-        company: "@facebook",
-    },
-    {
-        name: "Sophie Alpert",
-        avatar_url: "https://avatars2.githubusercontent.com/u/6820?v=4",
-        company: "Humu",
-    },
-    {
-        name: "Sebastian Markbåge",
-        avatar_url: "https://avatars2.githubusercontent.com/u/63648?v=4",
-        company: "Facebook",
-    },
-];
+// const testData = [
+//     {
+//         name: "Dan Abramov",
+//         avatar_url: "https://avatars0.githubusercontent.com/u/810438?v=4",
+//         company: "@facebook",
+//     },
+//     {
+//         name: "Sophie Alpert",
+//         avatar_url: "https://avatars2.githubusercontent.com/u/6820?v=4",
+//         company: "Humu",
+//     },
+//     {
+//         name: "Sebastian Markbåge",
+//         avatar_url: "https://avatars2.githubusercontent.com/u/63648?v=4",
+//         company: "Facebook",
+//     },
+// ];
 
 const CardList = (props) => (
     (CardList.propTypes = {
@@ -59,9 +60,17 @@ class Card extends React.Component {
 class Form extends React.Component {
     // userNameInput = React.createRef();
     state = { userName: "" };
-    handleSubmit = (event) => {
-        event.preventDefault();
+    handleSubmit = async (event) => {
+        (Form.propTypes = {
+            onSubmit: PropTypes.func,
+        }),
+            event.preventDefault();
+        const resp = await axios.get(
+            `https://api.github.com/users/${this.state.userName}`
+        );
+        this.props.onSubmit(resp.data);
         console.log(this.state.userName);
+        this.setState({ userName: "" });
         // console.log(this.userNameInput.current.value);
     };
     render() {
@@ -93,14 +102,22 @@ class App extends React.Component {
     // }
 
     state = {
-        profiles: testData,
+        // profiles: testData,
+        profiles: [],
+    };
+
+    addNewProfile = (profile) => {
+        // console.log("App", profile);
+        this.setState((state) => ({
+            profiles: state.profiles.concat(profile),
+        }));
     };
 
     render() {
         return (
             <div>
                 <div className="header">{this.title}</div>
-                <Form />
+                <Form onSubmit={this.addNewProfile} />
                 <CardList profiles={this.state.profiles} />
             </div>
         );
