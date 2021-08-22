@@ -11,13 +11,32 @@ const StarsDisplay = (props) => (
 );
 
 const PlayNumber = (props) => (
-    <button className="number" onClick={() => console.log("Num", props.number)}>
+    <button
+        className="number"
+        style={{ backgroundColor: colors[props.status] }}
+        onClick={() => console.log("Num", props.number)}
+    >
         {props.number}
     </button>
 );
 
 const App = () => {
     const [stars, setStars] = useState(utils.random(1, 9));
+    const [availableNums, setAvailableNums] = useState(utils.range(1, 9));
+    const [candidateNums, setCandidateNums] = useState([]);
+
+    const candidatesAreWrong = utils.sum(candidateNums) > stars;
+
+    const numberStatus = (number) => {
+        if (!availableNums.includes(number)) {
+            return "used";
+        }
+        if (candidateNums.includes(number)) {
+            return candidatesAreWrong ? "wrong" : "candidate";
+        }
+        return "available";
+    };
+
     return (
         <div className="game">
             <div className="help">
@@ -29,7 +48,11 @@ const App = () => {
                 </div>
                 <div className="right">
                     {utils.range(1, 9).map((numberId) => (
-                        <PlayNumber key={numberId} number={numberId} />
+                        <PlayNumber
+                            key={numberId}
+                            number={numberId}
+                            status={numberStatus(numberId)}
+                        />
                     ))}
                 </div>
             </div>
@@ -39,12 +62,12 @@ const App = () => {
 };
 
 // Color Theme
-//   const colors = {
-//     available: 'lightgray',
-//     used: 'lightgreen',
-//     wrong: 'lightcoral',
-//     candidate: 'deepskyblue',
-//   };
+const colors = {
+    available: "lightgray",
+    used: "lightgreen",
+    wrong: "lightcoral",
+    candidate: "deepskyblue",
+};
 
 // Math science
 const utils = {
