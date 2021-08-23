@@ -1,6 +1,7 @@
 // import logo from './logo.svg';
 import "./App.css";
 import React, { useEffect, useState } from "react";
+// import PropTypes from "prop-types";
 
 const StarsDisplay = (props) => (
     <>
@@ -32,7 +33,7 @@ const PlayAgain = (props) => (
     </div>
 );
 
-const StarMarch = () => {
+const StarMatch = (props) => {
     const [stars, setStars] = useState(utils.random(1, 9));
     const [availableNums, setAvailableNums] = useState(utils.range(1, 9));
     const [candidateNums, setCandidateNums] = useState([]);
@@ -61,12 +62,6 @@ const StarMarch = () => {
             return candidatesAreWrong ? "wrong" : "candidate";
         }
         return "available";
-    };
-
-    const resetGame = () => {
-        setStars(utils.random(1, 9));
-        setAvailableNums(utils.range(1, 9));
-        setCandidateNums([]);
     };
 
     const onNumberClick = (number, currentStatus) => {
@@ -99,7 +94,7 @@ const StarMarch = () => {
                 <div className="left">
                     {gameStatus !== "playing" ? (
                         <PlayAgain
-                            onClick={resetGame}
+                            onClick={props.startNewGame}
                             gameStatus={gameStatus}
                         />
                     ) : (
@@ -125,7 +120,7 @@ const StarMarch = () => {
 const App = () => {
     const [gameId, setGameId] = useState(1);
     return (
-        <StarMarch key={gameId} startNewGame={() => setGameId(gameId + 1)} />
+        <StarMatch key={gameId} startNewGame={() => setGameId(gameId + 1)} />
     );
 };
 
